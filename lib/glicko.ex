@@ -49,20 +49,6 @@ defmodule Glicko do
   @type new_rating_opts :: [system_constant: float, convergence_tolerance: float]
 
   @doc """
-  Calculates the probability of a player winning against an opponent.
-
-  Returns a value between `0.0` and `1.0`.
-  """
-  @spec win_probability(player :: Player.t(), opponent :: Player.t()) :: float
-  def win_probability(player, opponent) do
-    win_probability(
-      player |> Player.rating(:v2),
-      opponent |> Player.rating(:v2),
-      opponent |> Player.rating_deviation(:v2)
-    )
-  end
-
-  @doc """
   Calculates the probability of a player winning
 
   Calculates the winning probability from a player rating, opponent rating and
@@ -73,31 +59,17 @@ defmodule Glicko do
 
   Returns a value between `0.0` and `1.0`.
   """
-  @spec win_probability(
-          player_rating :: Player.rating(),
-          opponent_rating :: Player.rating(),
-          opponent_rating_deviation :: Player.rating_deviation()
-        ) :: float
-  def win_probability(player_rating, opponent_rating, opponent_rating_deviation) do
-    calc_e(player_rating, opponent_rating, calc_g(opponent_rating_deviation))
+  @spec win_probability(player :: Player.t(), opponent :: Player.t()) :: float
+  def win_probability(player = %Player.V2{}, opponent = %Player.V2{}) do
+    calc_e(player.rating, opponent.rating, calc_g(opponent.rating_deviation))
+  end
+
+  def win_probability(player, opponent) do
+    win_probability(Player.to_v2(player), Player.to_v2(opponent))
   end
 
   @doc """
-  Calculates the probability of a player drawing against an opponent
-
-  Returns a value between `0.0` and `1.0`.
-  """
-  @spec draw_probability(player :: Player.t(), opponent :: Player.t()) :: float
-  def draw_probability(player, opponent) do
-    draw_probability(
-      player |> Player.rating(:v2),
-      opponent |> Player.rating(:v2),
-      opponent |> Player.rating_deviation(:v2)
-    )
-  end
-
-  @doc """
-  Calculates the probability of a player drawing against an opponent
+  Calculates the probability of a player drawing
 
   Calculates the drawing probability from a player rating, opponent rating and
   opponent rating deviation.
@@ -107,14 +79,9 @@ defmodule Glicko do
 
   Returns a value between `0.0` and `1.0`.
   """
-  @spec draw_probability(
-          player_rating :: Player.rating(),
-          opponent_rating :: Player.rating(),
-          opponent_rating_deviation :: Player.rating_deviation()
-        ) :: float
-  def draw_probability(player_rating, opponent_rating, opponent_rating_deviation) do
-    1 -
-      abs(win_probability(player_rating, opponent_rating, opponent_rating_deviation) - 0.5) / 0.5
+  @spec draw_probability(player :: Player.t(), opponent :: Player.t()) :: float
+  def draw_probability(player, opponent) do
+    1 - abs(win_probability(player, opponent) - 0.5) / 0.5
   end
 
   @doc """

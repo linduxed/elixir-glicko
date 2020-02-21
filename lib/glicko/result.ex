@@ -58,7 +58,11 @@ defmodule Glicko.Result do
   Supports passing either `:loss`, `:draw`, or `:win` as shortcuts.
   """
   @spec new(opponent :: Player.t(), score :: score | score_shortcut) :: t
+  def new(opponent = %Player.V2{}, score) do
+    new(opponent.rating, opponent.rating_deviation, score)
+  end
+
   def new(opponent, score) do
-    new(Player.rating(opponent, :v2), Player.rating_deviation(opponent, :v2), score)
+    new(Player.to_v2(opponent), score)
   end
 end
