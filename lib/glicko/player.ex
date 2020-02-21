@@ -1,6 +1,6 @@
 defmodule Glicko.Player do
   @moduledoc """
-  Provides convenience functions that handle conversions between Glicko versions one and two.
+  Handles conversions between Glicko versions one and two.
 
   ## Usage
 
@@ -29,8 +29,9 @@ defmodule Glicko.Player do
       iex> %Player.V1{} |> Player.to_v2(0.06)
       %Player.V2{rating: 0.0, rating_deviation: 2.014761872416068, volatility: 0.06}
 
-  Note calling `to_v1` with a *v1* player or likewise with `to_v2` and a *v2* player
-  will pass-through unchanged. The volatility arg in this case is ignored.
+  Note calling `to_v1` with a *v1* player or likewise with `to_v2` and a *v2*
+  player will pass-through unchanged. The volatility arg in this case is
+  ignored.
 
       iex> player_v2 = %Player.V2{}
       iex> player_v2 == Player.to_v2(player_v2)
@@ -169,15 +170,15 @@ defmodule Glicko.Player do
   confidence interval.
 
   The lowest value in the interval is the player's rating minus twice the RD,
-  and the highest value is the player's rating plus twice the RD.
-  The volatility measure does not appear in the calculation of this interval.
+  and the highest value is the player's rating plus twice the RD. The
+  volatility measure does not appear in the calculation of this interval.
 
-  An example would be if a player's rating is 1850 and the RD is 50,
-  the interval would range from 1750 to 1950. We would then say that we're 95%
+  An example would be if a player's rating is 1850 and the RD is 50, the
+  interval would range from 1750 to 1950. We would then say that we're 95%
   confident that the player's actual strength is between 1750 and 1950.
 
-  When a player has a low RD, the interval would be narrow, so that we would
-  be 95% confident about a player’s strength being in a small interval of values.
+  When a player has a low RD, the interval would be narrow, so that we would be
+  95% confident about a player’s strength being in a small interval of values.
   """
   @spec rating_interval(player :: t, as_version :: version | nil) ::
           {rating_low :: float, rating_high :: float}

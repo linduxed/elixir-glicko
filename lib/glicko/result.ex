@@ -1,6 +1,6 @@
 defmodule Glicko.Result do
   @moduledoc """
-  Provides convenience functions for handling a result against an opponent.
+  Generates Results from Players
 
   ## Usage
 
@@ -29,9 +29,11 @@ defmodule Glicko.Result do
   defstruct [:rating, :rating_deviation, :score]
 
   @doc """
-  Creates a new result from an opponent rating, opponent rating deviation and score.
+  Creates a new result from an opponent rating, opponent rating deviation and
+  score.
 
-  Values provided for the opponent rating and opponent rating deviation must be *v2* based.
+  Values provided for the opponent rating and opponent rating deviation must be
+  *v2* based.
 
   Supports passing either `:loss`, `:draw`, or `:win` as shortcuts.
   """

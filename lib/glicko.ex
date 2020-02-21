@@ -2,7 +2,8 @@ defmodule Glicko do
   @moduledoc """
   Provides the implementation of the Glicko rating system.
 
-  See the [specification](http://www.glicko.net/glicko/glicko2.pdf) for implementation details.
+  See the [specification](http://www.glicko.net/glicko/glicko2.pdf) for
+  implementation details.
 
   ## Usage
 
@@ -62,9 +63,13 @@ defmodule Glicko do
   end
 
   @doc """
-  Calculates the probability of a player winning against an opponent from a player rating, opponent rating and opponent rating deviation.
+  Calculates the probability of a player winning
 
-  Values provided for the player rating, opponent rating and opponent rating deviation must be *v2* based.
+  Calculates the winning probability from a player rating, opponent rating and
+  opponent rating deviation.
+
+  Values provided for the player rating, opponent rating and opponent rating
+  deviation must be *v2* based.
 
   Returns a value between `0.0` and `1.0`.
   """
@@ -78,7 +83,7 @@ defmodule Glicko do
   end
 
   @doc """
-  Calculates the probability of a player drawing against an opponent.
+  Calculates the probability of a player drawing against an opponent
 
   Returns a value between `0.0` and `1.0`.
   """
@@ -92,9 +97,13 @@ defmodule Glicko do
   end
 
   @doc """
-  Calculates the probability of a player drawing against an opponent from a player rating, opponent rating and opponent rating deviation.
+  Calculates the probability of a player drawing against an opponent
 
-  Values provided for the player rating, opponent rating and opponent rating deviation must be *v2* based.
+  Calculates the drawing probability from a player rating, opponent rating and
+  opponent rating deviation.
+
+  Values provided for the player rating, opponent rating and opponent rating
+  deviation must be *v2* based.
 
   Returns a value between `0.0` and `1.0`.
   """
@@ -109,7 +118,10 @@ defmodule Glicko do
   end
 
   @doc """
-  Generate a new rating from an existing rating and a series (or lack) of results.
+  Generate a new rating
+
+  Generate a new rating from an existing rating and a series (or lack) of
+  results.
 
   Returns the updated player with the same version given to the function.
   """
