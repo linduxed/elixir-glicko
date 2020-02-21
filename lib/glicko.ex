@@ -140,7 +140,7 @@ defmodule Glicko do
     |> Player.to_v1()
   end
 
-  defp do_new_rating(%Player.V2{} = player, [], _) do
+  defp do_new_rating(%Player.V2{} = player, _results = [], _opts) do
     player_post_rd =
       calc_player_post_base_rd(:math.pow(player.rating_deviation, 2), player.volatility)
 
