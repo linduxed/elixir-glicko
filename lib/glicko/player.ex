@@ -179,7 +179,8 @@ defmodule Glicko.Player do
   When a player has a low RD, the interval would be narrow, so that we would
   be 95% confident about a player’s strength being in a small interval of values.
   """
-  @spec rating_interval(player :: t, as_version :: version | nil) :: {rating_low :: float, rating_high :: float}
+  @spec rating_interval(player :: t, as_version :: version | nil) ::
+          {rating_low :: float, rating_high :: float}
   def rating_interval(player, as_version \\ nil) do
     {
       rating(player, as_version) - rating_deviation(player, as_version) * 2,
