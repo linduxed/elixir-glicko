@@ -8,39 +8,50 @@ defmodule GlickoTest do
 
   doctest Glicko
 
-  @player %Player.V1{rating: 1500, rating_deviation: 200} |> Player.to_v2()
-
-  @results [
-    Result.new(%Player.V1{rating: 1400, rating_deviation: 30}, :win),
-    Result.new(%Player.V1{rating: 1550, rating_deviation: 100}, :loss),
-    Result.new(%Player.V1{rating: 1700, rating_deviation: 300}, :loss)
-  ]
-
-  @valid_player_rating_after_results 1464.06 |> Player.scale_rating_to(:v2)
-  @valid_player_rating_deviation_after_results 151.52 |> Player.scale_rating_deviation_to(:v2)
-  @valid_player_volatility_after_results 0.05999
-
-  @valid_player_rating_deviation_after_no_results 200.2714
-                                                  |> Player.scale_rating_deviation_to(:v2)
-
   describe "new rating" do
     test "with results" do
-      player = Glicko.new_rating(@player, @results, system_constant: 0.5)
+      player_before_results_v1 = %Player.V1{rating: 1500, rating_deviation: 200}
+      player_before_results_v2 = Player.to_v2(player_before_results_v1)
 
-      assert_in_delta Player.rating(player), @valid_player_rating_after_results, 1.0e-4
+      results = [
+        Result.new(%Player.V1{rating: 1400, rating_deviation: 30}, :win),
+        Result.new(%Player.V1{rating: 1550, rating_deviation: 100}, :loss),
+        Result.new(%Player.V1{rating: 1700, rating_deviation: 300}, :loss)
+      ]
 
-      assert_in_delta Player.rating_deviation(player),
-                      @valid_player_rating_deviation_after_results,
-                      1.0e-4
+      player_after_results_v2 =
+        %Player.V2{} = Glicko.new_rating(player_before_results_v2, results, system_constant: 0.5)
 
-      assert_in_delta Player.volatility(player), @valid_player_volatility_after_results, 1.0e-5
+      player_after_results_v1 = Player.to_v1(player_after_results_v2)
+
+      assert_in_delta player_after_results_v1.rating,
+                      player_before_results_v1.rating - 35.94,
+                      1.0e-2
+
+      assert_in_delta player_after_results_v1.rating_deviation,
+                      player_before_results_v1.rating_deviation - 48.48,
+                      1.0e-2
+
+      assert_in_delta player_after_results_v2.volatility,
+                      player_before_results_v2.volatility - 0.001,
+                      1.0e-3
     end
 
     test "no results" do
-      player = Glicko.new_rating(@player, [])
+      initial_rating_deviation = 200
 
-      assert_in_delta Player.rating_deviation(player),
-                      @valid_player_rating_deviation_after_no_results,
+      player = %Player.V1{
+        rating: 1500,
+        rating_deviation: initial_rating_deviation
+      }
+
+      player_after_no_results =
+        player
+        |> Glicko.new_rating(_results = [])
+        |> Player.to_v1()
+
+      assert_in_delta player_after_no_results.rating_deviation,
+                      initial_rating_deviation + 0.2714,
                       1.0e-4
     end
   end
